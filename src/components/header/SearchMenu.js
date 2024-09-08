@@ -8,26 +8,41 @@ import {
   search,
 } from "../../functions/user";
 import { Link } from "react-router-dom";
+
+// ---------------------------------------------------------------------------------
+// Search user and search history menu
+// ---------------------------------------------------------------------------------
+
 export default function SearchMenu({ color, setShowSearchMenu, token }) {
+
   const [iconVisible, setIconVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
   const [searchHistory, setSearchHistory] = useState([]);
   const menu = useRef(null);
   const input = useRef(null);
+
+  // Popup remove if touch anywhere
   useClickOutside(menu, () => {
     setShowSearchMenu(false);
   });
+
+  // Get search history
   useEffect(() => {
     getHistory();
   }, []);
+
+  // Get search history API call
   const getHistory = async () => {
     const res = await getSearchHistory(token);
     setSearchHistory(res);
   };
+
   useEffect(() => {
     input.current.focus();
   }, []);
+
+  // Search a user
   const searchHandler = async () => {
     if (searchTerm === "") {
       setResults("");
@@ -36,14 +51,19 @@ export default function SearchMenu({ color, setShowSearchMenu, token }) {
       setResults(res);
     }
   };
+
+  // Save to history
   const addToSearchHistoryHandler = async (searchUser) => {
     const res = await addToSearchHistory(searchUser, token);
     getHistory();
   };
+
+  // Remove search history
   const handleRemove = async (searchUser) => {
     removeFromSearch(searchUser, token);
     getHistory();
   };
+
   return (
     <div className="header_left search_area scrollbar" ref={menu}>
       <div className="search_wrap">
@@ -104,11 +124,12 @@ export default function SearchMenu({ color, setShowSearchMenu, token }) {
                   to={`/profile/${user.user.username}`}
                   onClick={() => addToSearchHistoryHandler(user.user._id)}
                 >
-                  <img src={user.user.picture} alt="" />
+                  <img src={user?.user?.picture} alt="" />
                   <span>
-                    {user.user.first_name} {user.user.last_name}
+                    {user?.user?.first_name} {user?.user?.last_name}
                   </span>
                 </Link>
+                {/* Remove search history */}
                 <i
                   className="exit_icon"
                   onClick={() => {

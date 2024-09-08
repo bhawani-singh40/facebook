@@ -1,9 +1,13 @@
 import { Form, Formik } from "formik";
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import LoginInput from "../../components/inputs/loginInput";
 import * as Yup from "yup";
 import axios from "axios";
+
+// ----------------------------------------------------------------
+// Reset password code verification
+// ----------------------------------------------------------------
+
 export default function CodeVerification({
   code,
   setCode,
@@ -14,6 +18,8 @@ export default function CodeVerification({
   setError,
   userInfos,
 }) {
+
+  // Code validation
   const validateCode = Yup.object({
     code: Yup.string()
       .required("Code is required")
@@ -21,6 +27,8 @@ export default function CodeVerification({
       .max("5", "Code must be 5 characters."),
   });
   const { email } = userInfos;
+
+  // code verification API call
   const verifyCode = async () => {
     try {
       setLoading(true);
@@ -36,7 +44,7 @@ export default function CodeVerification({
       setError(error.response.data.message);
     }
   };
-  console.log(email);
+ 
   return (
     <div className="reset_form">
       <div className="reset_form_header">Code verification</div>

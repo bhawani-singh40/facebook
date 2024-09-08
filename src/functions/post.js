@@ -36,8 +36,12 @@ export const createPost = async (
 
 };
 
+// ---------------------------------------------------------------
+// React a post
+// ---------------------------------------------------------------
 
 export const reactPost = async (postId, react, token) => {
+
   try {
     const { data } = await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/reactPost`,
@@ -55,8 +59,12 @@ export const reactPost = async (postId, react, token) => {
   } catch (error) {
     return error.response.data.message;
   }
+  
 };
 
+// ----------------------------------------------------------------
+// Get post reacts
+// ----------------------------------------------------------------
 
 export const getReacts = async (postId, token) => {
   try {
@@ -69,14 +77,18 @@ export const getReacts = async (postId, token) => {
         },
       }
     );
-    return data;
+    return data?.data;
   } catch (error) {
     return error.response.data.message;
   }
 };
 
+// ---------------------------------------------------------------
+// Create a new comment
+// ---------------------------------------------------------------
 
 export const comment = async (postId, comment, image, token) => {
+  
   try {
     const { data } = await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/comment`,
@@ -92,14 +104,19 @@ export const comment = async (postId, comment, image, token) => {
         },
       }
     );
-    return data;
+    return data?.data;
   } catch (error) {
     return error.response.data.message;
   }
+
 };
 
+// --------------------------------------------------------------
+// Save and unsave a post
+// --------------------------------------------------------------
 
 export const savePost = async (postId, token) => {
+  
   try {
     const { data } = await axios.put(
       `${process.env.REACT_APP_BACKEND_URL}/savePost/${postId}`,
@@ -115,6 +132,7 @@ export const savePost = async (postId, token) => {
   } catch (error) {
     return error.response.data.message;
   }
+  
 };
 
 // -------------------------------------------------------------

@@ -1,5 +1,9 @@
 import { useEffect } from "react";
 
+// ---------------------------------------------------------------------------------
+// Popup remove if touch anywhere
+// ---------------------------------------------------------------------------------
+
 export default function useClickOutside(ref, fun) {
   useEffect(() => {
     const listener = (e) => {

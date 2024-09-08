@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 import { Dots } from "../../svg";
 
+// -------------------------------------------------------------
+// Profile Component - Menu
+// -------------------------------------------------------------
+
 export default function ProfileMenu() {
   return (
     <div className="profile_menu_wrap">

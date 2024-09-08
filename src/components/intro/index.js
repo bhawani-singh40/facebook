@@ -4,6 +4,11 @@ import "./style.css";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import EditDetails from "./EditDetails";
+
+// --------------------------------------------------------------------
+// User information show & update
+// --------------------------------------------------------------------
+
 export default function Intro({ detailss, visitor, setOthername }) {
   const { user } = useSelector((state) => ({ ...state }));
   const [details, setDetails] = useState();
@@ -12,6 +17,8 @@ export default function Intro({ detailss, visitor, setOthername }) {
     setDetails(detailss);
     setInfos(detailss);
   }, [detailss]);
+
+  // User information
   const initial = {
     bio: details?.bio ? details.bio : "",
     otherName: details?.otherName ? details.otherName : "",
@@ -24,13 +31,14 @@ export default function Intro({ detailss, visitor, setOthername }) {
     relationship: details?.relationship ? details.relationship : "",
     instagram: details?.instagram ? details.instagram : "",
   };
+
   const [infos, setInfos] = useState(initial);
   const [showBio, setShowBio] = useState(false);
   const [max, setMax] = useState(infos?.bio ? 100 - infos?.bio.length : 100);
 
+  // Update details API call
   const updateDetails = async () => {
     try {
-      console.log("sent");
       const { data } = await axios.put(
         `${process.env.REACT_APP_BACKEND_URL}/updateDetails`,
         {
@@ -43,20 +51,23 @@ export default function Intro({ detailss, visitor, setOthername }) {
         }
       );
       setShowBio(false);
-      setDetails(data);
-      setOthername(data.otherName);
+      setDetails(data?.data);
+      setOthername(data?.data?.otherName);
     } catch (error) {
       console.log(error.response.data.message);
     }
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInfos({ ...infos, [name]: value });
     setMax(100 - e.target.value.length);
   };
+
   return (
     <div className="profile_card">
       <div className="profile_card_header">Intro</div>
+      {/* If user bio already then update */}
       {details?.bio && !showBio && (
         <div className="info_col">
           <span className="info_text">{details?.bio}</span>
@@ -70,6 +81,7 @@ export default function Intro({ detailss, visitor, setOthername }) {
           )}
         </div>
       )}
+      {/* Add bio */}
       {!details?.bio && !showBio && !visitor && (
         <button
           className="gray_btn hover1 w100"
@@ -79,6 +91,7 @@ export default function Intro({ detailss, visitor, setOthername }) {
         </button>
       )}
       {showBio && (
+        // Bio update input component
         <Bio
           infos={infos}
           max={max}

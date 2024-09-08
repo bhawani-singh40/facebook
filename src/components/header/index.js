@@ -21,7 +21,13 @@ import { useRef, useState } from "react";
 import AllMenu from "./AllMenu";
 import useClickOutside from "../../helpers/clickOutside";
 import UserMenu from "./userMenu";
+
+// --------------------------------------------------------------------
+// Header section
+// --------------------------------------------------------------------
+
 export default function Header({ page, getAllPosts }) {
+
   const { user } = useSelector((user) => ({ ...user }));
   const color = "#65676b";
   const [showSearchMenu, setShowSearchMenu] = useState(false);
@@ -116,9 +122,9 @@ export default function Header({ page, getAllPosts }) {
 
           {showAllMenu && <AllMenu />}
         </div>
-        <div className="circle_icon hover1">
+        <Link to="/chat" className="circle_icon hover1">
           <Messenger />
-        </div>
+        </Link>
         <div className="circle_icon hover1">
           <Notifications />
           <div className="right_notification">5</div>

@@ -1,6 +1,7 @@
 import { Dots } from "../../svg";
 import { stories } from "../../data/home";
 import AddFriendSmallCard from "./AddFriendSmallCard";
+
 export default function PplYouMayKnow() {
   return (
     <div className="pplumayknow">
@@ -17,4 +18,5 @@ export default function PplYouMayKnow() {
       </div>
     </div>
   );
+
 }

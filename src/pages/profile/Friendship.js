@@ -5,16 +5,26 @@ import {
   acceptRequest,
   addFriend,
   cancelRequest,
+  createNewChat,
   deleteRequest,
   follow,
   unfollow,
   unfriend,
 } from "../../functions/user";
+import { useNavigate } from "react-router-dom";
+
+
+// -----------------------------------------------------------------
+// Handle all friend API methods
+// -----------------------------------------------------------------
+
 export default function Friendship({ friendshipp, profileid }) {
+
   const [friendship, setFriendship] = useState(friendshipp);
   useEffect(() => {
     setFriendship(friendshipp);
   }, [friendshipp]);
+
   const [friendsMenu, setFriendsMenu] = useState(false);
   const [respondMenu, setRespondMenu] = useState(false);
   const menu = useRef(null);
@@ -22,22 +32,33 @@ export default function Friendship({ friendshipp, profileid }) {
   useClickOutside(menu, () => setFriendsMenu(false));
   useClickOutside(menu1, () => setRespondMenu(false));
   const { user } = useSelector((state) => ({ ...state }));
+  const navigate = useNavigate()
+
+  // Add friend API call
   const addFriendHandler = async () => {
     setFriendship({ ...friendship, requestSent: true, following: true });
     await addFriend(profileid, user.token);
   };
+
+  // Friend request cancel API call
   const cancelRequestHandler = async () => {
     setFriendship({ ...friendship, requestSent: false, following: false });
     await cancelRequest(profileid, user.token);
   };
+
+  // Follow a user API call
   const followHandler = async () => {
     setFriendship({ ...friendship, following: true });
     await follow(profileid, user.token);
   };
+
+  // Unfollow a user API call
   const unfollowHandler = async () => {
     setFriendship({ ...friendship, following: false });
     await unfollow(profileid, user.token);
   };
+
+  // Accept friend request
   const acceptRequestHanlder = async () => {
     setFriendship({
       ...friendship,
@@ -48,6 +69,8 @@ export default function Friendship({ friendshipp, profileid }) {
     });
     await acceptRequest(profileid, user.token);
   };
+
+  // Unfriend a user API call
   const unfriendHandler = async () => {
     setFriendship({
       ...friendship,
@@ -58,6 +81,8 @@ export default function Friendship({ friendshipp, profileid }) {
     });
     await unfriend(profileid, user.token);
   };
+  
+  // Delete friend request API call
   const deleteRequestHanlder = async () => {
     setFriendship({
       ...friendship,
@@ -69,14 +94,30 @@ export default function Friendship({ friendshipp, profileid }) {
     await deleteRequest(profileid, user.token);
   };
 
+  // Create chat API call
+  const messageHandler = async () => {
+    // setFriendship({
+    //   ...friendship,
+    //   friends: false,
+    //   following: false,
+    //   requestSent: false,
+    //   requestReceived: false,
+    // });
+    await createNewChat(user?.id, profileid, user.token);
+    navigate('/chat')
+  };
+
   return (
     <div className="friendship">
+
+      {/* Profile Friends icon */}
       {friendship?.friends ? (
         <div className="friends_menu_wrap">
           <button className="gray_btn" onClick={() => setFriendsMenu(true)}>
             <img src="../../../icons/friends.png" alt="" />
             <span>Friends</span>
           </button>
+          {/* Profile Friends icon click menu */}
           {friendsMenu && (
             <div className="open_cover_menu" ref={menu}>
               <div className="open_cover_menu_item hover1">
@@ -87,6 +128,7 @@ export default function Friendship({ friendshipp, profileid }) {
                 <img src="../../../icons/editFriends.png" alt="" />
                 Edit Friend list
               </div>
+              {/* Unfollow a user */}
               {friendship?.following ? (
                 <div
                   className="open_cover_menu_item hover1"
@@ -96,6 +138,7 @@ export default function Friendship({ friendshipp, profileid }) {
                   Unfollow
                 </div>
               ) : (
+                // Follow a user
                 <div
                   className="open_cover_menu_item hover1"
                   onClick={() => followHandler()}
@@ -104,6 +147,7 @@ export default function Friendship({ friendshipp, profileid }) {
                   Follow
                 </div>
               )}
+              {/* Unfriend a user */}
               <div
                 className="open_cover_menu_item hover1"
                 onClick={() => unfriendHandler()}
@@ -115,6 +159,7 @@ export default function Friendship({ friendshipp, profileid }) {
           )}
         </div>
       ) : (
+        // Add friend
         !friendship?.requestSent &&
         !friendship?.requestReceived && (
           <button className="blue_btn" onClick={() => addFriendHandler()}>
@@ -123,6 +168,7 @@ export default function Friendship({ friendshipp, profileid }) {
           </button>
         )
       )}
+      {/* Friend Request cancle */}
       {friendship?.requestSent ? (
         <button className="blue_btn" onClick={() => cancelRequestHandler()}>
           <img
@@ -133,12 +179,14 @@ export default function Friendship({ friendshipp, profileid }) {
           <span>Cancel Request</span>
         </button>
       ) : (
+        // If request check
         friendship?.requestReceived && (
           <div className="friends_menu_wrap">
             <button className="gray_btn" onClick={() => setRespondMenu(true)}>
               <img src="../../../icons/friends.png" alt="" />
               <span>Respond</span>
             </button>
+            {/* Request accept */}
             {respondMenu && (
               <div className="open_cover_menu" ref={menu1}>
                 <div
@@ -147,6 +195,7 @@ export default function Friendship({ friendshipp, profileid }) {
                 >
                   Confirm
                 </div>
+                {/* Delete friend request */}
                 <div
                   className="open_cover_menu_item hover1"
                   onClick={() => deleteRequestHanlder()}
@@ -158,6 +207,7 @@ export default function Friendship({ friendshipp, profileid }) {
           </div>
         )
       )}
+      {/* Unfollow a user */}
       <div className="flex">
         {friendship?.following ? (
           <button className="gray_btn" onClick={() => unfollowHandler()}>
@@ -165,12 +215,14 @@ export default function Friendship({ friendshipp, profileid }) {
             <span>Following</span>
           </button>
         ) : (
+          // Follow a user 
           <button className="blue_btn" onClick={() => followHandler()}>
             <img src="../../../icons/follow.png" className="invert" alt="" />
             <span>Follow</span>
           </button>
         )}
-        <button className={friendship?.friends ? "blue_btn" : "gray_btn"}>
+        {/* Send a message */}
+        <button onClick={() => messageHandler()} className={friendship?.friends ? "blue_btn" : "gray_btn"}>
           <img
             src="../../../icons/message.png"
             className={friendship?.friends && "invert"}

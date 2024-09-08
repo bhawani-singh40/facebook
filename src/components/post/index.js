@@ -24,23 +24,30 @@ export default function Post({ post, user, profile }) {
   const [checkSaved, setCheckSaved] = useState();
   const [comments, setComments] = useState([]);
 
+
   useEffect(() => {
     getPostReacts();
   }, [post]);
+  
   useEffect(() => {
     setComments(post?.comments);
   }, [post]);
 
+  // Get post reacts API call
   const getPostReacts = async () => {
-    const res = await getReacts(post._id, user.token);
+    const res = await getReacts(post?._id, user?.token);
     setReacts(res.reacts);
     setCheck(res.check);
     setTotal(res.total);
     setCheckSaved(res.checkSaved);
   };
 
+  // Post react api call
   const reactHandler = async (type) => {
+    
+    // react a post api call
     reactPost(post._id, type, user.token);
+
     if (check == type) {
       setCheck();
       let index = reacts.findIndex((x) => x.react == check);
@@ -195,11 +202,14 @@ export default function Post({ post, user, profile }) {
         </div>
       </div>
       <div className="post_actions">
+      {/*  Post reacts popup */}
         <ReactsPopup
           visible={visible}
           setVisible={setVisible}
           reactHandler={reactHandler}
         />
+
+        {/* React  a post */}
         <div
           className="post_action hover1"
           onMouseOver={() => {

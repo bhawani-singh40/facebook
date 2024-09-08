@@ -50,14 +50,14 @@ export default function Profile({ getAllPosts }) {
 
   var visitor = userName === user.username ? false : true;
   const [othername, setOthername] = useState();
-  const path = `${userName}/*`;
+  const path = `${userName}/`;
   const max = 30;
   const sort = "desc";
 
+  // Get profile API call
   const getProfile = async () => {
 
     try {
-
       dispatch({
         type: "PROFILE_REQUEST",
       });
@@ -75,8 +75,8 @@ export default function Profile({ getAllPosts }) {
         navigate("/profile");
       } else {
 
+        // Get all photos
         try {
-
           const images = await axios.post(
             `${process.env.REACT_APP_BACKEND_URL}/listImages`,
             { path, sort, max },
@@ -86,7 +86,7 @@ export default function Profile({ getAllPosts }) {
               },
             }
           );
-          setPhotos(images?.data);
+          setPhotos(images?.data?.data);
 
         } catch (error) {
           console.log(error);
@@ -233,11 +233,13 @@ export default function Profile({ getAllPosts }) {
             </>
           ) : (
             <>
+            {/* Cover pic */}
               <Cover
                 cover={profile.cover}
                 visitor={visitor}
                 photos={photos.resources}
               />
+              {/* Profile pic */}
               <ProfielPictureInfos
                 profile={profile}
                 visitor={visitor}
@@ -248,6 +250,7 @@ export default function Profile({ getAllPosts }) {
             </>
           )}
 
+          {/* Menu DOWN  */}
           <ProfileMenu />
         </div>
       </div>

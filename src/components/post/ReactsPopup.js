@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { reactPost } from "../../functions/post";
 import { useSelector } from "react-redux";
+
+// -----------------------------------------------------------
+// Post reacts images
+// -----------------------------------------------------------
+
 const reactsArray = [
   {
     name: "like",
@@ -27,6 +32,10 @@ const reactsArray = [
     image: "../../../reacts/angry.gif",
   },
 ];
+
+// -----------------------------------------------------------------
+// Post reacts popup
+// -----------------------------------------------------------------
 
 export default function ReactsPopup({ visible, setVisible, reactHandler }) {
   return (

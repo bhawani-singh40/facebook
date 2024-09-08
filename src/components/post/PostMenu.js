@@ -24,6 +24,8 @@ export default function PostMenu({
   const [test, setTest] = useState(postUserId === userId ? true : false);
   const menu = useRef(null);
   useOnClickOutside(menu, () => setShowMenu(false));
+
+  // Save a post
   const saveHandler = async () => {
     savePost(postId, token);
     if (checkSaved) {
@@ -32,6 +34,8 @@ export default function PostMenu({
       setCheckSaved(true);
     }
   };
+
+  // Download a img
   const downloadImages = async () => {
     images.map((img) => {
       saveAs(img.url, "image.jpg");
@@ -48,6 +52,8 @@ export default function PostMenu({
   return (
     <ul className="post_menu" ref={menu}>
       {test && <MenuItem icon="pin_icon" title="Pin Post" />}
+
+      {/* Save the post */}
       <div onClick={() => saveHandler()}>
         {checkSaved ? (
           <MenuItem
@@ -63,6 +69,7 @@ export default function PostMenu({
           />
         )}
       </div>
+
       <div className="line"></div>
       {test && <MenuItem icon="edit_icon" title="Edit Post" />}
       {!test && (

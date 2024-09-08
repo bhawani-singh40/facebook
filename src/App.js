@@ -12,8 +12,14 @@ import { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import { postsReducer } from "./functions/reducers";
 import Friends from "./pages/friends";
+import Chat from "./pages/chat/Chat";
+
+// ------------------------------------------------------------------
+// App Component - Define routes
+// ------------------------------------------------------------------
 
 function App() {
+
   const [visible, setVisible] = useState(false);
   const { user, darkTheme } = useSelector((state) => ({ ...state }));
   const [{ loading, error, posts }, dispatch] = useReducer(postsReducer, {
@@ -21,9 +27,11 @@ function App() {
     posts: [],
     error: "",
   });
+
   useEffect(() => {
     getAllPosts();
   }, []);
+  
   const getAllPosts = async () => {
     try {
       dispatch({
@@ -48,8 +56,10 @@ function App() {
       });
     }
   };
+
   return (
     <div className={darkTheme && "dark"}>
+      
       {visible && (
         <CreatePostPopup
           user={user}
@@ -101,6 +111,8 @@ function App() {
             exact
           />
           <Route path="/activate/:token" element={<Activate />} exact />
+
+          <Route path="/chat" element={<Chat user={user} />} exact />
         </Route>
         <Route element={<NotLoggedInRoutes />}>
           <Route path="/login" element={<Login />} exact />

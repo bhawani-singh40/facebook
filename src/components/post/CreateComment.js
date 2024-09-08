@@ -4,6 +4,11 @@ import { comment } from "../../functions/post";
 import { uploadImages } from "../../functions/uploadImages";
 import dataURItoBlob from "../../helpers/dataURItoBlob";
 import { ClipLoader } from "react-spinners";
+
+// -----------------------------------------------------------------------
+// Create a new comment
+// -----------------------------------------------------------------------
+
 export default function CreateComment({ user, postId, setComments, setCount }) {
   const [picker, setPicker] = useState(false);
   const [text, setText] = useState("");
@@ -13,9 +18,11 @@ export default function CreateComment({ user, postId, setComments, setCount }) {
   const [loading, setLoading] = useState(false);
   const textRef = useRef(null);
   const imgInput = useRef(null);
+
   useEffect(() => {
     textRef.current.selectionEnd = cursorPosition;
   }, [cursorPosition]);
+  
   const handleEmoji = (e, { emoji }) => {
     const ref = textRef.current;
     ref.focus();
@@ -46,8 +53,12 @@ export default function CreateComment({ user, postId, setComments, setCount }) {
       setCommentImage(event.target.result);
     };
   };
+
+  // Create a new comment api call
   const handleComment = async (e) => {
     if (e.key === "Enter") {
+
+      // if image in the comment
       if (commentImage != "") {
         setLoading(true);
         const img = dataURItoBlob(commentImage);
@@ -55,12 +66,15 @@ export default function CreateComment({ user, postId, setComments, setCount }) {
         let formData = new FormData();
         formData.append("path", path);
         formData.append("file", img);
+        
+        // Upload img api call
         const imgComment = await uploadImages(formData, path, user.token);
 
+        // create comment api call
         const comments = await comment(
           postId,
           text,
-          imgComment[0].url,
+          imgComment[0],
           user.token
         );
         setComments(comments);
@@ -69,8 +83,11 @@ export default function CreateComment({ user, postId, setComments, setCount }) {
         setText("");
         setCommentImage("");
       } else {
+
+        // only text comment
         setLoading(true);
 
+        // create comment api call
         const comments = await comment(postId, text, "", user.token);
         setComments(comments);
         setCount((prev) => ++prev);
@@ -80,6 +97,7 @@ export default function CreateComment({ user, postId, setComments, setCount }) {
       }
     }
   };
+
   return (
     <div className="create_comment_wrap">
       <div className="create_comment">
@@ -151,4 +169,5 @@ export default function CreateComment({ user, postId, setComments, setCount }) {
       )}
     </div>
   );
+  
 }

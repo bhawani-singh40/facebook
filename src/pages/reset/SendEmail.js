@@ -1,6 +1,10 @@
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+// ---------------------------------------------------------------
+// Reset password by email
+// ---------------------------------------------------------------
+
 export default function SendEmail({
   userInfos,
   email,
